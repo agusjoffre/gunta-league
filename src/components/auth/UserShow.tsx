@@ -9,8 +9,8 @@ type Props = {
 
 const UserShow = ({ username, imageSrc }: Props) => {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <div className="relative h-12 w-12">
+    <div className="flex items-center justify-center gap-2">
+      <div className="relative h-10 w-10">
         <Image
           alt="user avatar"
           src={imageSrc ? imageSrc : "/vercel.svg"}
@@ -19,7 +19,7 @@ const UserShow = ({ username, imageSrc }: Props) => {
         />
       </div>
       {username && username.length > 0 && (
-        <p className="text-sm font-medium">{username}</p>
+        <p className="text-xs font-medium">@{username}</p>
       )}
     </div>
   );
