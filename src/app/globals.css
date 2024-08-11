@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "AktivGrotesk";
-  src: url("/public/fonts/AktivGrotesk-Black.otf") format("opentype"),
-    url("/public/fonts/AktivGrotesk-BlackItalic.otf") format("opentype"),
-    url("/public/fonts/AktivGrotesk-Bold.otf") format("opentype"),
-    url("/public/fonts/AktivGrotesk-Medium.otf") format("opentype"),
-    url("/public/fonts/AktivGrotesk-MediumItalic.otf") format("opentype"),
-    url("/public/fonts/AktivGrotesk-Regular.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
-
 @layer base {
   :root {
     --background: 0 0% 9%;
@@ -91,6 +79,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "AktivGrotesk", sans-serif;
   }
 }
