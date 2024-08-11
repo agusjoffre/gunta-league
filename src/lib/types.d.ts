@@ -28,6 +28,7 @@ export type Team = {
 };
 
 export type Match = {
+  id?: string;
   matchday_id: string;
   home_goals: number;
   away_goals: number;
