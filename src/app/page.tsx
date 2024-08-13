@@ -1,16 +1,10 @@
-import MatchCard from "@/components/match-card";
-import MatchStatsCard from "@/components/match-stats-card";
-import MatchDayCard from "@/components/matchday-card";
-import PositionsTable from "@/components/positions-table";
-import TopScorersTable from "@/components/top-scorers-table";
-import TournamentInfoCard from "@/components/tournament-info-card";
-import React from "react";
+import CreateTournamentForm from "@/components/forms/create-tournament-form";
 
-type Props = {};
-
-const Home = (props: Props) => {
+const Home = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24"></main>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <CreateTournamentForm />
+    </main>
   );
 };
 

@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { TournamentSchema } from "./zodSchemas";
+
 export type User = {
   clerk_id: string;
   created_at?: string;
@@ -13,18 +16,24 @@ export type Tournament = {
   name: string;
   description?: string;
   pts_win: number;
-  pts_lose: number;
+  pts_defeat: number;
   pts_draw: number;
-  logoUrl?: string;
+  sport?: string;
+  logo_url?: string;
   owner_id?: string;
   type: TournamentTypes;
+  rounds?: number;
+  created_at?: string;
 };
 
+export type TournamentSchemaType = z.infer<typeof TournamentSchema>;
+
 export type Team = {
+  id?: string;
   tournament_id: string;
   name: string;
   color?: string;
-  logoUrl?: string;
+  logo_url?: string;
 };
 
 export type Match = {
@@ -53,4 +62,11 @@ export enum TournamentTypes {
   ROUND_ROBIN = "round_robin",
   ELIMINATION = "elimination",
   GROUP_PHASE_ELIMINATION = "group_phase_elimination",
+}
+
+export enum UserRoles {
+  ADMIN = "admin",
+  INVITED = "invited",
+  MEMBER = "member",
+  MODERATOR = "mod",
 }
