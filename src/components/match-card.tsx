@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Match } from "@/lib/types";
+import Image from "next/image";
 
 type Props = {
   matchData: Match;
@@ -8,10 +9,16 @@ type Props = {
 
 const MatchCard = ({ matchData }: Props) => {
   return (
-    <div className="italic flex items-center justify-between border-y-2 border-accent/20 py-2">
+    <div className="italic flex items-center justify-between border-y-2 border-accent/15 py-2">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <div>ESCUDO</div>
+          <Image
+            alt="team logo"
+            src="/liga_gunta_2.png"
+            width={20}
+            height={20}
+            className="rounded-full"
+          />
           <span className="font-medium">IvanBoca</span>
         </div>
         <div className="flex items-center gap-2">
@@ -20,7 +27,13 @@ const MatchCard = ({ matchData }: Props) => {
           <span className="font-medium">{matchData.away_goals}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div>ESCUDO 2</div>
+          <Image
+            alt="team logo"
+            src="/liga_gunta_2.png"
+            width={20}
+            height={20}
+            className="rounded-full"
+          />
           <span className="font-medium">GuidoABG</span>
         </div>
       </div>

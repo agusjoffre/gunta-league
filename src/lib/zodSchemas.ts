@@ -12,3 +12,9 @@ export const TournamentSchema = z.object({
   type: z.nativeEnum(TournamentTypes),
   rounds: z.string().min(1).max(10),
 });
+
+export const TeamSchema = z.object({
+  name: z.string().min(1).max(255),
+  color: z.string().optional(),
+  logo_url: z.string().url().optional(),
+});

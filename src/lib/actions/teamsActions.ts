@@ -18,7 +18,9 @@ type TeamResponse = {
 export const createTeam = async (teamData: Team): Promise<TeamResponse> => {
   const { data, error, status, statusText } = await supabase
     .from("teams")
-    .insert(teamData);
+    .insert(teamData)
+    .select("*")
+    .single();
 
   if (error)
     return {

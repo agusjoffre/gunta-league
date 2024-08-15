@@ -74,13 +74,15 @@ const CreateTournamentForm = (props: Props) => {
 
       router.push(`/tournaments/${tournamentData.id}`);
     },
-    onError: (error: any) => {
-      toast({
-        title: "Error!",
-        description:
-          error.message || "Algo salio mal. Por favor intentalo de nuevo.",
-        variant: "destructive",
-      });
+    onError: (error: any, tournamentData) => {
+      if (!tournamentData.name) {
+        toast({
+          title: "Error!",
+          description:
+            error.message || "Algo salio mal. Por favor intentalo de nuevo.",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -98,6 +100,8 @@ const CreateTournamentForm = (props: Props) => {
       rounds,
     };
 
+    console.log(values.name);
+
     mutate(values);
   }
 
@@ -111,7 +115,7 @@ const CreateTournamentForm = (props: Props) => {
             <FormItem>
               <FormLabel>Nombre del torneo</FormLabel>
               <FormControl>
-                <Input placeholder="Nuevo torneo..." {...field} />
+                <Input placeholder="Nuevo torneo..." {...field} type="text" />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -29,13 +29,16 @@ export const createTournament = async (
     };
 
   const clerkId = user.id;
+  const name = tournamentData.name;
 
   const { data, error, status, statusText } = await supabase
     .from("tournaments")
     .insert({
       ...tournamentData,
+      name,
       owner_id: clerkId,
     })
+    .select("*")
     .single();
 
   if (error)
@@ -164,9 +167,11 @@ export const getAllTournamentsOfUser =
         message: statusText,
         success: false,
       };
+    
+    const tournamentData = data as Tournament[]
 
     return {
-      data,
+      data: tournamentData,
       error,
       message: statusText,
       status,

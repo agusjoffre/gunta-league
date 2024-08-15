@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TournamentSchema } from "./zodSchemas";
+import { TeamSchema, TournamentSchema } from "./zodSchemas";
 
 export type User = {
   clerk_id: string;
@@ -35,6 +35,8 @@ export type Team = {
   color?: string;
   logo_url?: string;
 };
+
+export type TeamSchemaType = z.infer<typeof TeamSchema>;
 
 export type Match = {
   id?: string;

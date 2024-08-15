@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Image from "next/image";
 
 type Props = {};
 
@@ -27,14 +28,20 @@ const PositionsTable = (props: Props) => {
           <TableHead className="text-right text-foreground">Pts</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        <TableRow className="italic bg-gradient-to-l from-accent/0 to-accent hover:bg-gradient-to-b hover:from-accent/20 hover:to-accent/50">
-          <TableCell className="text-center bg-card font-black text-xl">
+      <TableBody className="overflow-hidden max-w-full">
+        <TableRow className="bg-gradient-to-l from-accent/0 to-accent hover:bg-gradient-to-b hover:from-accent/20 hover:to-accent/50">
+          <TableCell className="italic text-center bg-card font-black text-xl">
             1
           </TableCell>
           <TableCell className="flex items-center gap-3">
-            <div>ESCUDO 1</div>
-            <span className="font-bold italic text-lg">IvanBoca</span>
+            <Image
+              alt="user logo"
+              src="/liga_gunta_2.png"
+              width={20}
+              height={20}
+              className="rounded-full"
+            />
+            <span className="font-bold text-lg">IvanBoca</span>
           </TableCell>
           <TableCell className="text-lg">10</TableCell>
           <TableCell className="text-lg">9</TableCell>
@@ -45,13 +52,19 @@ const PositionsTable = (props: Props) => {
           <TableCell className="text-lg">34</TableCell>
           <TableCell className="text-right text-lg">28</TableCell>
         </TableRow>
-        <TableRow className="italic">
-          <TableCell className="text-center bg-card font-black text-xl">
+        <TableRow className="">
+          <TableCell className="italic text-center bg-card font-black text-xl">
             2
           </TableCell>
           <TableCell className="flex items-center gap-3">
-            <div>ESCUDO 2</div>
-            <span className="font-bold italic text-lg">AgusPlay</span>
+            <Image
+              alt="user logo"
+              src="/liga_gunta_2.png"
+              width={20}
+              height={20}
+              className="rounded-full"
+            />
+            <span className="font-bold  text-lg">AgusPlay</span>
           </TableCell>
           <TableCell className="text-lg">10</TableCell>
           <TableCell className="text-lg">9</TableCell>
@@ -62,13 +75,19 @@ const PositionsTable = (props: Props) => {
           <TableCell className="text-lg">34</TableCell>
           <TableCell className="text-right text-lg">24</TableCell>
         </TableRow>
-        <TableRow className="italic bg-gradient-to-l from-destructive/0 to-destructive hover:bg-gradient-to-b hover:from-destructive/20 hover:to-destructive/50">
-          <TableCell className="text-center bg-card font-black text-xl">
+        <TableRow className=" bg-gradient-to-l from-destructive/0 to-destructive hover:bg-gradient-to-b hover:from-destructive/20 hover:to-destructive/50">
+          <TableCell className="italic text-center bg-card font-black text-xl">
             3
           </TableCell>
           <TableCell className="flex items-center gap-3">
-            <div>ESCUDO 3</div>
-            <span className="font-bold italic text-lg">Tumba</span>
+            <Image
+              alt="user logo"
+              src="/liga_gunta_2.png"
+              width={20}
+              height={20}
+              className="rounded-full"
+            />
+            <span className="font-bold  text-lg">Tumba</span>
           </TableCell>
           <TableCell className="text-lg">10</TableCell>
           <TableCell className="text-lg">9</TableCell>
