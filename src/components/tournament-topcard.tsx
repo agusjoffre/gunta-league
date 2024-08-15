@@ -1,45 +1,40 @@
-import React from "react";
+"use query";
+import { getAllTeamsFromTournamentId } from "@/lib/actions/teamsActions";
 import { Button } from "./ui/button";
 import { Team, Tournament } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useMutation } from "react-query";
+import { useToast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   tournament: Tournament;
 };
 
 const TournamentTopCard = ({ tournament }: Props) => {
-  // get teams from tournament_id
-  const teams: Team[] = [
-    {
-      name: "Flo",
-      tournament_id: tournament.id || "1",
-      color: "#FFFFF",
-      id: "1",
-      logo_url: "/liga_gunta_2.png",
+  const { toast } = useToast();
+
+  const { data, isLoading, mutate } = useMutation({
+    mutationFn: async (tournamentId: string) =>
+      getAllTeamsFromTournamentId(tournamentId),
+    onError(err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Algo salio mal.",
+        variant: "destructive",
+      });
     },
-    {
-      name: "IvanBoca",
-      tournament_id: tournament.id || "1",
-      color: "#fbfdbe",
-      id: "2",
-      logo_url: "/liga_gunta_2.png",
-    },
-    {
-      name: "John",
-      tournament_id: tournament.id || "1",
-      color: "#fbfdbe",
-      id: "3",
-      logo_url: "/liga_gunta_2.png",
-    },
-    {
-      name: "Jeremy",
-      tournament_id: tournament.id || "1",
-      color: "#fbfdbe",
-      id: "4",
-      logo_url: "/liga_gunta_2.png",
-    },
-  ];
+  });
+
+  const tournamentId = tournament.id as string;
+
+  useEffect(() => {
+    mutate(tournamentId);
+  }, [tournamentId, mutate]);
+
+  const teams = (data?.data as Team[]) || [];
 
   return (
     <div className="league-card-gradient w-full h-56 flex flex-col gap-5 justify-between pt-10 py-4 pr-4">
@@ -72,26 +67,31 @@ const TournamentTopCard = ({ tournament }: Props) => {
           <h3 className="font-medium text-lg">EQUIPOS</h3>
         </div>
         <div className="flex items-center gap-6">
-          {teams.map((team) => {
-            return (
-              <Link
-                href={`/tournaments/${tournament.id}/teams/${team.id}`}
-                key={team.id}
-                className="hover:scale-110 transition-all cursor-pointer"
-              >
-                <div className="flex flex-col italic items-center gap-2">
-                  <Image
-                    alt="league logo"
-                    src={team.logo_url || "/liga_gunta_2.png"}
-                    width={60}
-                    height={60}
-                    className="rounded-full"
-                  />
-                  <span className="font-bold text-xs">{team.name}</span>
-                </div>
-              </Link>
-            );
-          })}
+          {isLoading ? (
+            <Loader2 className="h-8 w-8 animate-spin text-foreground" />
+          ) : (
+            teams.length > 0 &&
+            teams.map((team) => {
+              return (
+                <Link
+                  href={`/tournaments/${tournament.id}/teams/${team.id}`}
+                  key={team.id}
+                  className="hover:scale-110 transition-all cursor-pointer"
+                >
+                  <div className="flex flex-col italic items-center gap-2">
+                    <Image
+                      alt="league logo"
+                      src={team.logo_url || "/liga_gunta_2.png"}
+                      width={60}
+                      height={60}
+                      className="rounded-full"
+                    />
+                    <span className="font-bold text-xs">{team.name}</span>
+                  </div>
+                </Link>
+              );
+            })
+          )}
         </div>
       </div>
       <div className="flex justify-end items-center">

@@ -84,15 +84,6 @@ export const getAllTeamsFromTournamentId = async (
       success: false,
     };
 
-  if (!data)
-    return {
-      data: null,
-      error: "Error fetching team. No data returned",
-      status,
-      message: statusText,
-      success: false,
-    };
-
   return {
     data,
     error,

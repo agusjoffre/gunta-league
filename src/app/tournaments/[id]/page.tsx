@@ -46,7 +46,7 @@ const TournamentsPage = ({ params }: Props) => {
         </div>
       </section>
 
-      <TournamentViewSelector />
+      <TournamentViewSelector tournamentId={tournament_id} />
     </main>
   );
 };

@@ -5,14 +5,16 @@ import { cn } from "@/lib/utils";
 import MatchDayCard from "./matchday-card";
 import TournamentCalendarView from "./tournament-calendar-view";
 
-type Props = {};
+type Props = {
+  tournamentId: string;
+};
 
 enum Selected {
   CALENDAR = "calendar",
   TEAMS = "teams",
 }
 
-const TournamentViewSelector = (props: Props) => {
+const TournamentViewSelector = ({ tournamentId }: Props) => {
   const [selected, setSelected] = useState<Selected>(Selected.CALENDAR);
 
   return (
@@ -39,7 +41,9 @@ const TournamentViewSelector = (props: Props) => {
           EQUIPOS
         </Button>
       </div>
-      {selected === Selected.CALENDAR && <TournamentCalendarView />}
+      {selected === Selected.CALENDAR && (
+        <TournamentCalendarView tournamentId={tournamentId} />
+      )}
     </div>
   );
 };
