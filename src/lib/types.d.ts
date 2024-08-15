@@ -51,6 +51,8 @@ export type Match = {
 export type MatchDay = {
   tournament_id: string;
   number: number;
+  id?: string;
+  created_at?: string;
 };
 
 export type Player = {
