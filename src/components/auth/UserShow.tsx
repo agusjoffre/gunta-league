@@ -19,7 +19,7 @@ const UserShow = ({ username, imageSrc }: Props) => {
         />
       </div>
       {username && username.length > 0 && (
-        <p className="text-xs font-medium">@{username}</p>
+        <p className="text-sm font-medium">{username}</p>
       )}
     </div>
   );

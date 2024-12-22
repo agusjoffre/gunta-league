@@ -27,6 +27,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "react-query": "^3.39.3",
+    "svix": "^1.44.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "tournament-pairings": "^1.5.2",
