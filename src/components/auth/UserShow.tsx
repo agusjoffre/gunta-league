@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 
@@ -13,7 +12,7 @@ const UserShow = ({ username, imageSrc }: Props) => {
       <div className="relative h-10 w-10">
         <Image
           alt="user avatar"
-          src={imageSrc ? imageSrc : "/vercel.svg"}
+          src={imageSrc || ""}
           fill
           className="rounded-full border-2 border-background bg-white"
         />

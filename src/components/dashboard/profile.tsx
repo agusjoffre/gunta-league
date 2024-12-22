@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import {
   Card,
   CardContent,
@@ -8,25 +8,51 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
+import ProfileNameCard from "./profile-name-card";
+import { useQuery } from "react-query";
+import { getUser } from "@/lib/actions/auth/getUser";
+import UserShow from "../auth/UserShow";
+import { Loader2 } from "lucide-react";
 
 type Props = {};
 
 const Profile = (props: Props) => {
+  const { data, isLoading, error } = useQuery({
+    queryFn: () => getUser(),
+    queryKey: ["userInfo"],
+  });
+
+  const user = data?.data;
+
   return (
-    <div className="flex flex-col gap-4 min-h-full w-full">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold italic">
-            INFORMACION PERSONAL
-          </CardTitle>
-          <CardDescription>
-            Aqui esta la informacion personal del usuario. Puedes modificarla
-            desde aqui. aqui.
-          </CardDescription>
+    <div className="flex items-center gap-4 min-h-full w-full px-32">
+      <aside className="flex flex-col gap-4">
+        {isLoading && (
+          <p className="text-center">
+            <Loader2 className="animate-spin" />
+          </p>
+        )}
+        <UserShow imageSrc={user?.image_url} username={user?.username} />
+      </aside>
+      <Card className="w-full h-full border-none">
+        <CardHeader className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <Button variant={"linearAccent"}>EDITAR</Button>
+          </div>
+          <div>
+            <CardTitle className="text-2xl font-semibold italic">
+              INFORMACION PERSONAL
+            </CardTitle>
+            <CardDescription>
+              Aqui esta tu informacion personal. Puedes modificarla desde aqui.
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent className="grid grid-cols-2 gap-4">
+          <ProfileNameCard />
+        </CardContent>
         <CardFooter>
-          <Button variant={"linearAccent"}>EDITAR</Button>
+          <Button variant={"destructive"}>ELIMINAR CUENTA</Button>
         </CardFooter>
       </Card>
     </div>

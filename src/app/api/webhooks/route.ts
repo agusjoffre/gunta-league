@@ -65,6 +65,7 @@ export async function POST(req: Request) {
     const username = evt.data.username || email.split("@")[0];
     const clerkId = evt.data.id;
     const newUser: User = {
+      image_url: evt.data.image_url,
       isAdmin: false,
       email,
       clerk_id: clerkId,

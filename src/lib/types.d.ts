@@ -9,6 +9,7 @@ export type User = {
   email: string;
   name?: string;
   friend_code?: string;
+  image_url?: string;
 };
 
 export type Tournament = {
