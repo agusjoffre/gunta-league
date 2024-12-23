@@ -2,6 +2,7 @@
 
 import { User } from "@/lib/types";
 import { createClient } from "@/utils/supabase/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 type Response = {
   success: boolean;
@@ -9,13 +10,24 @@ type Response = {
   error: string | null;
 };
 
-export const updateUser = async (user: User): Promise<Response> => {
+export const updateUser = async (
+  user: Omit<User, "clerk_id">
+): Promise<Response> => {
   const db = createClient();
+
+  const clerkUser = await currentUser();
+
+  if (!clerkUser) {
+    return {
+      error: "User not found",
+      success: false,
+    };
+  }
 
   const { data, error } = await db
     .from("users")
     .update(user)
-    .eq("clerk_id", user.clerk_id)
+    .eq("clerk_id", clerkUser.id)
     .select()
     .single();
 

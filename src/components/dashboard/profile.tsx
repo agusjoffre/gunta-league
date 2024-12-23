@@ -13,6 +13,9 @@ import { useQuery } from "react-query";
 import { getUser } from "@/lib/actions/auth/getUser";
 import UserShow from "../auth/UserShow";
 import { Loader2 } from "lucide-react";
+import ProfileEmailCard from "./profile-email-card";
+import ProfileFriendCode from "./profile-friendcode-card";
+import ProfileEditDialog from "./profile-edit-dialog";
 
 type Props = {};
 
@@ -37,7 +40,7 @@ const Profile = (props: Props) => {
       <Card className="w-full h-full border-none">
         <CardHeader className="flex flex-col gap-4">
           <div className="flex justify-end">
-            <Button variant={"linearAccent"}>EDITAR</Button>
+            <ProfileEditDialog email={user?.email || ""} name={user?.name} />
           </div>
           <div>
             <CardTitle className="text-2xl font-semibold italic">
@@ -48,8 +51,10 @@ const Profile = (props: Props) => {
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
+        <CardContent className="grid grid-cols-3 gap-4">
           <ProfileNameCard />
+          <ProfileEmailCard />
+          <ProfileFriendCode />
         </CardContent>
         <CardFooter>
           <Button variant={"destructive"}>ELIMINAR CUENTA</Button>

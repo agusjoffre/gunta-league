@@ -5,11 +5,11 @@ import { currentUser } from "@clerk/nextjs/server";
 
 type Response = {
   success: boolean;
-  friend_code?: string;
+  email?: string;
   error: string | null;
 };
 
-export const getProfileFriendCode = async (): Promise<Response> => {
+export const getProfileEmail = async (): Promise<Response> => {
   const user = await currentUser();
 
   if (!user) {
@@ -23,7 +23,7 @@ export const getProfileFriendCode = async (): Promise<Response> => {
 
   const { error, data } = await db
     .from("users")
-    .select("friend_code")
+    .select("email")
     .eq("clerk_id", user.id)
     .single();
 
@@ -44,6 +44,6 @@ export const getProfileFriendCode = async (): Promise<Response> => {
   return {
     success: true,
     error: null,
-    friend_code: data.friend_code,
+    email: data.email,
   };
 };

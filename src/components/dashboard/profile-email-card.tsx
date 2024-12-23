@@ -8,30 +8,30 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { getProfileName } from "@/lib/actions/profile/getProfileName";
+import { getProfileEmail } from "@/lib/actions/profile/getProfileEmail";
 import { Loader2 } from "lucide-react";
 
 type Props = {};
 
-const ProfileNameCard = (props: Props) => {
+const ProfileEmailCard = (props: Props) => {
   const {
-    data: profileNameData,
+    data: profileEmailData,
     isLoading,
     error: queryError,
   } = useQuery({
-    queryKey: ["profileName"],
-    queryFn: () => getProfileName(),
+    queryKey: ["profileEmail"],
+    queryFn: () => getProfileEmail(),
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nombre</CardTitle>
+        <CardTitle>Email</CardTitle>
         <CardDescription>
           {isLoading ? (
             <Loader2 className="animate-spin" />
           ) : (
-            profileNameData?.name || "N/A"
+            profileEmailData?.email || "N/A"
           )}
         </CardDescription>
       </CardHeader>
@@ -39,4 +39,4 @@ const ProfileNameCard = (props: Props) => {
   );
 };
 
-export default ProfileNameCard;
+export default ProfileEmailCard;

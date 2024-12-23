@@ -106,6 +106,7 @@ export async function POST(req: Request) {
     const name = evt.data.first_name + " " + evt.data.last_name || undefined;
     const clerkId = evt.data.id;
     const updatedUser: User = {
+      image_url: evt.data.image_url,
       isAdmin: false,
       email,
       clerk_id: clerkId,
