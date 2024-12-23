@@ -1,5 +1,5 @@
 "use client";
-import { createTournament } from "@/lib/actions/tournamentActions";
+import { createTournament } from "@/lib/actions/tournament/tournamentActions";
 import {
   Tournament,
   TournamentSchemaType,
@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -107,7 +108,7 @@ const CreateTournamentForm = (props: Props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pb-20">
         <FormField
           control={form.control}
           name="name"
@@ -296,11 +297,7 @@ const CreateTournamentForm = (props: Props) => {
           )}
         />
         <Button type="submit" disabled={isLoading} variant={"accent"}>
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin bg-accent-foreground" />
-          ) : (
-            "CREAR TORNEO"
-          )}
+          {isLoading ? <Loader2 className="animate-spin" /> : "CREAR TORNEO"}
         </Button>
       </form>
     </Form>

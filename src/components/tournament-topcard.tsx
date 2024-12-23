@@ -1,13 +1,13 @@
 "use query";
-import { getAllTeamsFromTournamentId } from "@/lib/actions/teamsActions";
+import { getAllTeamsFromTournamentId } from "@/lib/actions/team/teamsActions";
 import { Button } from "./ui/button";
 import { Team, Tournament } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useToast } from "./ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, LucideBrickWall } from "lucide-react";
 
 type Props = {
   tournament: Tournament;
@@ -16,43 +16,30 @@ type Props = {
 const TournamentTopCard = ({ tournament }: Props) => {
   const { toast } = useToast();
 
-  const { data, isLoading, mutate } = useMutation({
-    mutationFn: async (tournamentId: string) =>
-      getAllTeamsFromTournamentId(tournamentId),
-    onError(err: any) {
-      toast({
-        title: "Error",
-        description: err.message || "Algo salio mal.",
-        variant: "destructive",
-      });
-    },
+  const { data, isLoading } = useQuery({
+    queryFn: () => getAllTeamsFromTournamentId(tournament.id as string),
+    queryKey: ["teamsFromTournament", tournament.id],
   });
 
   const tournamentId = tournament.id as string;
-
-  useEffect(() => {
-    mutate(tournamentId);
-  }, [tournamentId, mutate]);
 
   const teams = (data?.data as Team[]) || [];
 
   return (
     <div className="league-card-gradient w-full h-56 flex flex-col gap-5 justify-between pt-10 py-4 pr-4">
       <div className="flex items-center gap-16 px-48">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {tournament.logo_url ? (
             <Image
               alt="league logo"
-              src={"/liga_gunta_2.png"}
+              src={tournament.logo_url}
               width={96}
               height={96}
-              className="rounded-xl"
+              className="rounded-xl min-h-24 min-w-24"
             />
           ) : (
             <div className="rounded-full min-w-24 min-h-24 bg-gradient-to-r from-primary/45 to-background/45 flex flex-col items-center justify-center">
-              <p className="text-sm font-black text-center">
-                {tournament.name}
-              </p>
+              <LucideBrickWall />
               <p className="text-xs">{tournament.sport || "Torneo"}</p>
             </div>
           )}
@@ -82,9 +69,9 @@ const TournamentTopCard = ({ tournament }: Props) => {
                     <Image
                       alt="league logo"
                       src={team.logo_url || "/liga_gunta_2.png"}
-                      width={60}
-                      height={60}
-                      className="rounded-full"
+                      width={64}
+                      height={64}
+                      className="rounded-full min-h-16 min-w-16"
                     />
                     <span className="font-bold text-xs">{team.name}</span>
                   </div>

@@ -10,12 +10,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useMutation } from "react-query";
-import { getAllTeamsFromTournamentId } from "@/lib/actions/teamsActions";
+import { useMutation, useQuery } from "react-query";
+import { getAllTeamsFromTournamentId } from "@/lib/actions/team/teamsActions";
 import { useToast } from "./ui/use-toast";
 import { useEffect, useState } from "react";
 import { generatePairings } from "@/lib/generatePairings";
-import { getOneTournamentById } from "@/lib/actions/tournamentActions";
+import { getOneTournamentById } from "@/lib/actions/tournament/getOneTournament";
 
 type Props = {
   tournamentId: string;
@@ -27,13 +27,9 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
   const { toast } = useToast();
 
   // get teams from tournamentId
-  const {
-    data: teamsData,
-    isLoading: isLoadingTeams,
-    mutate: getTeams,
-  } = useMutation({
-    mutationFn: async (tournamentId: string) =>
-      getAllTeamsFromTournamentId(tournamentId),
+  const { data: teamsData, isLoading: isLoadingTeams } = useQuery({
+    queryKey: ["teams", tournamentId],
+    queryFn: async () => getAllTeamsFromTournamentId(tournamentId),
     onError(err: any) {
       toast({
         title: "Error",
@@ -47,13 +43,9 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
   });
 
   // get tournament by id
-  const {
-    data: tournamentData,
-    mutate: getTournament,
-    isLoading: isLoadingTournament,
-  } = useMutation({
-    mutationFn: async (tournamentId: string) =>
-      getOneTournamentById(tournamentId),
+  const { data: tournamentData, isLoading: isLoadingTournament } = useQuery({
+    queryKey: ["tournament", tournamentId],
+    queryFn: () => getOneTournamentById(tournamentId),
     onError(err: any) {
       toast({
         title: "Error",
@@ -61,15 +53,15 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
         variant: "destructive",
       });
     },
+    onSuccess: (data) => {
+      setDialogOpen(false);
+    },
   });
-
-  useEffect(() => {
-    getTeams(tournamentId);
-    getTournament(tournamentId);
-  }, [getTeams, tournamentId, getTournament]);
 
   // create matchdays
   // create matches
+
+  const teams = teamsData?.data as Team[];
 
   function handleGenerateFixture() {
     const teams = teamsData?.data as Team[];
@@ -84,8 +76,12 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogTrigger className="font-black italic w-fit py-3 px-6 rounded-full text-accent-foreground bg-accent hover:bg-accent/80 hover:text-accent-foreground transition-all ease-in-out">
-        GENERAR FIXTURE
+      <DialogTrigger
+        asChild
+        disabled={isLoadingTeams || isLoadingTournament || teams.length < 2}
+        className=""
+      >
+        <Button variant={"accent"}>GENERAR FIXTURE</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

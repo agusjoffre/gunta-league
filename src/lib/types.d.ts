@@ -75,3 +75,11 @@ export enum UserRoles {
   MEMBER = "member",
   MODERATOR = "mod",
 }
+
+export type TournamentResponse = {
+  data: Tournament | Tournament[] | null;
+  success: boolean;
+  message: string;
+  status: number;
+  error: any;
+};

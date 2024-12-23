@@ -12,7 +12,7 @@ import { Textarea } from "./ui/textarea";
 import { Team, Tournament, TournamentTypes } from "@/lib/types.d";
 import Image from "next/image";
 import { useMutation } from "react-query";
-import { getAllTeamsFromTournamentId } from "@/lib/actions/teamsActions";
+import { getAllTeamsFromTournamentId } from "@/lib/actions/team/teamsActions";
 import { useToast } from "./ui/use-toast";
 import { useEffect } from "react";
 

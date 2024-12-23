@@ -77,51 +77,6 @@ export const createTournament = async (
   };
 };
 
-export const getOneTournamentById = async (
-  tournamentId: string
-): Promise<TournamentResponse> => {
-  const { data, error, status, statusText } = await supabase
-    .from("tournaments")
-    .select("*")
-    .eq("id", tournamentId)
-    .single();
-
-  if (error)
-    return {
-      data: null,
-      error,
-      message: error.message,
-      status,
-      success: false,
-    };
-
-  if (status !== 200 && status !== 201)
-    return {
-      data: null,
-      error: "Error fetching tournament. Status not 200/201",
-      message: statusText,
-      status,
-      success: false,
-    };
-
-  if (!data)
-    return {
-      data: null,
-      error: "Error fetching tournament. No data returned",
-      status,
-      message: statusText,
-      success: false,
-    };
-
-  return {
-    data,
-    error,
-    message: statusText,
-    status,
-    success: true,
-  };
-};
-
 export const getAllTournamentsOfUser =
   async (): Promise<TournamentResponse> => {
     const user = await currentUser();
@@ -167,8 +122,8 @@ export const getAllTournamentsOfUser =
         message: statusText,
         success: false,
       };
-    
-    const tournamentData = data as Tournament[]
+
+    const tournamentData = data as Tournament[];
 
     return {
       data: tournamentData,

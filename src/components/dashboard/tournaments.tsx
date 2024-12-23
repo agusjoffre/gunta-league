@@ -3,15 +3,18 @@
 import { Tournament, TournamentTypes } from "@/lib/types.d";
 import TournamentInfoCard from "../tournament-info-card";
 import { useMutation, useQuery } from "react-query";
-import { getAllTournamentsOfUser } from "@/lib/actions/tournamentActions";
+import { getAllTournamentsOfUser } from "@/lib/actions/tournament/tournamentActions";
 import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { Delete, Loader2, ArrowLeftFromLine } from "lucide-react";
+import { useEffect, useState } from "react";
+import CreateTournamentForm from "../forms/create-tournament-form";
 
 type Props = {};
 
 const DashboardTournaments = (props: Props) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   const { toast } = useToast();
 
   const { data, isLoading, mutate } = useMutation({
@@ -35,13 +38,18 @@ const DashboardTournaments = (props: Props) => {
   return (
     <div className="flex flex-col px-16 gap-7">
       <div className="justify-end flex items-center">
-        <Button variant={"accent"} className="col-span-4 w-fit ">
-          CREAR TORNEO
+        <Button
+          variant={isEditing ? "destructive" : "accent"}
+          onClick={() => {
+            setIsEditing(!isEditing);
+          }}
+        >
+          {isEditing ? <ArrowLeftFromLine /> : "CREAR TORNEO"}
         </Button>
       </div>
       {isLoading ? (
         <Loader2 className="mx-auto h-12 w-12 animate-spin" />
-      ) : (
+      ) : !isEditing ? (
         <div className="w-full grid grid-cols-4 ">
           {tournaments.length === 0 ? (
             <p className="col-span-4 text-center">No hay torneos.</p>
@@ -51,6 +59,8 @@ const DashboardTournaments = (props: Props) => {
             ))
           )}
         </div>
+      ) : (
+        <CreateTournamentForm />
       )}
     </div>
   );

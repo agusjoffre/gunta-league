@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import MatchDayCard from "./matchday-card";
 import TournamentCalendarView from "./tournament-calendar-view";
+import TournamentTeamsView from "./tournament-teams-view";
 
 type Props = {
   tournamentId: string;
@@ -43,6 +44,9 @@ const TournamentViewSelector = ({ tournamentId }: Props) => {
       </div>
       {selected === Selected.CALENDAR && (
         <TournamentCalendarView tournamentId={tournamentId} />
+      )}
+      {selected === Selected.TEAMS && (
+        <TournamentTeamsView tournament_id={tournamentId} />
       )}
     </div>
   );

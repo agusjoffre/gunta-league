@@ -17,7 +17,7 @@ const DashboardSelector = (props: Props) => {
   const [selected, setSelected] = useState<Selectors>(Selectors.PROFILE);
 
   return (
-    <div className="rounded-2xl border-x-2 border-accent h-[800px] w-full flex flex-col gap-16">
+    <div className="rounded-2xl border-x-2 border-accent min-h-[600px] w-full flex flex-col gap-16">
       <div className="flex items-center justify-center gap-8">
         <Button
           onClick={() => setSelected(Selectors.TOURNAMENTS)}

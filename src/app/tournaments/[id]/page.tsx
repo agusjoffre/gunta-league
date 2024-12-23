@@ -4,7 +4,11 @@ import PositionsTable from "@/components/positions-table";
 import TopScorersTable from "@/components/top-scorers-table";
 import TournamentTopCard from "@/components/tournament-topcard";
 import TournamentViewSelector from "@/components/tournament-view-selector";
-import { TournamentTypes } from "@/lib/types.d";
+import { useToast } from "@/components/ui/use-toast";
+import { getOneTournamentById } from "@/lib/actions/tournament/getOneTournament";
+import { Tournament, TournamentTypes } from "@/lib/types.d";
+import { Loader2 } from "lucide-react";
+import { useQuery } from "react-query";
 
 type Props = {
   params: {
@@ -15,20 +19,52 @@ type Props = {
 const TournamentsPage = ({ params }: Props) => {
   const { id } = params;
 
+  const { toast } = useToast();
+
   const tournament_id = id;
+
+  const { data, isLoading } = useQuery({
+    queryFn: () => getOneTournamentById(tournament_id),
+    queryKey: ["tournament", tournament_id],
+    onError: (err) =>
+      toast({
+        title: "Error",
+        description:
+          "Algo salio mal. Por favor recargue la pagina y espere un momento.",
+        variant: "destructive",
+      }),
+  });
+
+  if (!data) {
+    return (
+      <main className="flex min-h-screen flex-col items-center gap-12 pb-10">
+        <Loader2 className="animate-spin" />
+      </main>
+    );
+  }
+
+  const { name, logo_url, sport, pts_win, pts_draw, pts_defeat } =
+    data.data as Tournament;
 
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 pb-10">
-      <TournamentTopCard
-        tournament={{
-          name: "Torneo 1",
-          pts_defeat: 0,
-          pts_draw: 0,
-          pts_win: 0,
-          type: TournamentTypes.ROUND_ROBIN,
-          id: tournament_id,
-        }}
-      />
+      {isLoading ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        <TournamentTopCard
+          tournament={{
+            logo_url,
+            sport,
+            name,
+            pts_win,
+            pts_draw,
+            pts_defeat,
+            type: TournamentTypes.ROUND_ROBIN,
+            id: tournament_id,
+          }}
+        />
+      )}
+
       <section className="flex gap-72 w-full px-60">
         <div className="flex flex-col gap-2 w-full flex-2">
           <div className="flex flex-col gap-1 w-full">

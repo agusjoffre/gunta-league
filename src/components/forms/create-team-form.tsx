@@ -1,5 +1,5 @@
 "use client";
-import { createTeam } from "@/lib/actions/teamsActions";
+import { createTeam } from "@/lib/actions/team/teamsActions";
 
 import { useState } from "react";
 
@@ -59,7 +59,7 @@ const CreateTeamForm = ({ tournament_id }: Props) => {
         variant: "success",
       });
 
-      router.push(`/tournaments/${tournament_id}/teams/${teamData.id}`);
+      router.refresh();
     },
     onError: (error: any) => {
       toast({
@@ -133,11 +133,7 @@ const CreateTeamForm = ({ tournament_id }: Props) => {
           )}
         />
         <Button type="submit" disabled={isLoading} variant={"accent"}>
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin bg-accent-foreground" />
-          ) : (
-            "CREAR EQUIPO"
-          )}
+          {isLoading ? <Loader2 className="animate-spin" /> : "CREAR EQUIPO"}
         </Button>
       </form>
     </Form>

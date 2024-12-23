@@ -1,10 +1,8 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { auth } from "@clerk/nextjs/server";
 import { Team } from "@/lib/types.d";
 
-const { userId: clerkId } = auth();
 const supabase = createClient();
 
 type TeamResponse = {
