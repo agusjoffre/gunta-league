@@ -47,6 +47,7 @@ export type Match = {
   home_id: string;
   away_id: string;
   mvp_id?: string;
+  tournament_id: string;
 };
 
 export type MatchDay = {

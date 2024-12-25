@@ -2,7 +2,7 @@
 import { MatchDay } from "@/lib/types";
 import { createClient } from "@/utils/supabase/server";
 
-type MatchDayResponse = {
+export type MatchDayResponse = {
   success: boolean;
   message: string;
   data: MatchDay | MatchDay[] | null;
@@ -22,15 +22,19 @@ export const createMatchday = async (
       ...matchday,
       tournament_id,
     })
+    .select()
     .single();
-  if (error)
+
+  if (error) {
+    console.error("Error al insertar matchday en Supabase:", error);
     return {
       data: null,
       error,
-      message: error.message,
+      message: error?.message!,
       status,
       success: false,
     };
+  }
 
   if (status !== 200 && status !== 201)
     return {
@@ -41,7 +45,7 @@ export const createMatchday = async (
       success: false,
     };
 
-  if (!data)
+  if (!data) {
     return {
       data: null,
       error: "Error creating matchday. No data returned",
@@ -49,10 +53,11 @@ export const createMatchday = async (
       message: statusText,
       success: false,
     };
+  }
 
   return {
     data,
-    error,
+    error: null,
     message: statusText,
     status,
     success: true,

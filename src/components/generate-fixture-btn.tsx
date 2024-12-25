@@ -1,5 +1,5 @@
 "use client";
-import { Team, Tournament } from "@/lib/types.d";
+import { Match, MatchDay, Team, Tournament } from "@/lib/types.d";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -16,6 +16,12 @@ import { useToast } from "./ui/use-toast";
 import { useEffect, useState } from "react";
 import { generatePairings } from "@/lib/generatePairings";
 import { getOneTournamentById } from "@/lib/actions/tournament/getOneTournament";
+import {
+  createMatchday,
+  MatchDayResponse,
+} from "@/lib/actions/matchday/createMatchday";
+import { createMatch } from "@/lib/actions/matchesActions";
+import { generateFixture } from "@/lib/generateFixture";
 
 type Props = {
   tournamentId: string;
@@ -33,7 +39,7 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
     onError(err: any) {
       toast({
         title: "Error",
-        description: err.message || "Algo salio mal con el fetch de equipos.",
+        description: "Algo salio mal con el fetch de equipos.",
         variant: "destructive",
       });
     },
@@ -49,7 +55,7 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
     onError(err: any) {
       toast({
         title: "Error",
-        description: err.message || "Algo salio mal con el fetch de torneo.",
+        description: "Algo salio mal con el fetch de torneo.",
         variant: "destructive",
       });
     },
@@ -59,20 +65,89 @@ const GenerateFixtureBtn = ({ tournamentId }: Props) => {
   });
 
   // create matchdays
+  const { mutateAsync: mutateMatchDay, isLoading: isLoadingMatchday } =
+    useMutation({
+      mutationFn: async (matchdayData: MatchDay) =>
+        await createMatchday(tournamentId, matchdayData),
+      onSuccess: (data) => {
+        setDialogOpen(false);
+
+        if (!data.success) {
+          toast({
+            title: data.message,
+            description: `${data.error}. Por favor intentalo de nuevo.`,
+            variant: "destructive",
+          });
+        }
+        const matchdayData = data.data as MatchDay;
+        toast({
+          title: "Fecha creada con exito!",
+          description: `Fecha ${matchdayData.number}`,
+          variant: "success",
+        });
+      },
+      onError(err: any) {
+        toast({
+          title: "Error",
+          description: err.message || "Algo salio mal con el fetch de fechas.",
+          variant: "destructive",
+        });
+      },
+    });
+
   // create matches
+  const { mutateAsync: mutateMatch, isLoading: isLoadingMatch } = useMutation({
+    mutationFn: async (matchData: Match) => await createMatch(matchData),
+    onSuccess: (data) => {
+      setDialogOpen(false);
+
+      if (!data.success) {
+        toast({
+          title: data.message,
+          description: `${data.error}. Por favor intentalo de nuevo.`,
+          variant: "destructive",
+        });
+      }
+
+      const match = data.data as Match;
+      toast({
+        title: "Partido creado con exito!",
+        description: `${match.home_id} vs ${match.away_id}`,
+        variant: "success",
+      });
+    },
+    onError(err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Algo salio mal con el fetch de partidos.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const teams = teamsData?.data as Team[];
 
-  function handleGenerateFixture() {
-    const teams = teamsData?.data as Team[];
-    const tournament = tournamentData?.data as Tournament;
+  const handleGenerateFixture = async () => {
+    setDialogOpen(false);
 
-    const fixture = generatePairings(teams, tournament.type);
-    console.log(fixture);
+    if (!teamsData || !tournamentData) return;
 
-    const rounds = fixture.map((match) => match.round);
-    const numberOfRounds = Math.max(...rounds);
-  }
+    const tournament = tournamentData.data as Tournament;
+
+    await generateFixture(
+      teams,
+      tournamentId,
+      tournament.type,
+      mutateMatchDay,
+      mutateMatch
+    );
+
+    toast({
+      title: "Fixture generado con exito!",
+      description: "Partidos creados con exito.",
+      variant: "success",
+    });
+  };
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

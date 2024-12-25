@@ -5,7 +5,7 @@ import { Match } from "../types.d";
 
 const supabase = createClient();
 
-type MatchResponse = {
+export type MatchResponse = {
   success: boolean;
   message: string;
   data: Match | Match[] | null;
@@ -19,6 +19,7 @@ export const createMatch = async (match: Match): Promise<MatchResponse> => {
     .insert({
       ...match,
     })
+    .select()
     .single();
 
   if (error)
