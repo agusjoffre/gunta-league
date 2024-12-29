@@ -77,6 +77,8 @@ const TournamentCalendarView = ({ tournamentId }: Props) => {
         <p className="italic text-foreground/75 text-lg text-center">
           No hay partidos.
         </p>
+      ) : isLoadingMatches || matchdaysLoading ? (
+        <Loader2 className="w-8 h-8 animate-spin" />
       ) : (
         <div className="grid grid-cols-3 gap-14 min-w-96">
           {matchdays.map((matchday: MatchDay, i) => {

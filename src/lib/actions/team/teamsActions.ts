@@ -97,7 +97,8 @@ export const getOneTeamById = async (
   const { data, error, status, statusText } = await supabase
     .from("teams")
     .select("*")
-    .eq("id", team_id);
+    .eq("id", team_id)
+    .single();
 
   if (error)
     return {
