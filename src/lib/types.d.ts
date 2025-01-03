@@ -42,8 +42,8 @@ export type TeamSchemaType = z.infer<typeof TeamSchema>;
 export type Match = {
   id?: string;
   matchday_id: string;
-  home_goals?: number;
-  away_goals?: number;
+  home_goals?: number | null;
+  away_goals?: number | null;
   home_id: string;
   away_id: string;
   mvp_id?: string;

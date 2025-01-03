@@ -23,9 +23,9 @@ export const generateFixture = async (
     roundsMap.get(match.round)?.push({
       home_id: match.player1 as string,
       away_id: match.player2 as string,
-      home_goals: 0,
-      away_goals: 0,
-      matchday_id: "", // Se llenará al crear el matchday
+      home_goals: null,
+      away_goals: null,
+      matchday_id: "",
       tournament_id: tournamentId,
     });
   }

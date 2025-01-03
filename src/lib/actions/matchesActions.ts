@@ -224,3 +224,47 @@ export const deleteAllMatches = async (
     success: true,
   };
 };
+
+export const getAllMatchesFromTournament = async (
+  tournament_id: string
+): Promise<MatchResponse> => {
+  const { data, error, status, statusText } = await supabase
+    .from("matches")
+    .select("*")
+    .eq("tournament_id", tournament_id);
+
+  if (error)
+    return {
+      data: null,
+      error,
+      message: error.message,
+      status,
+      success: false,
+    };
+
+  if (status !== 200 && status !== 201)
+    return {
+      data: null,
+      error: "Error fetching all matches. Status not 200/201",
+      message: statusText,
+      status,
+      success: false,
+    };
+
+  if (!data)
+    return {
+      data: null,
+      error: "Error fetching all matches. No data returned",
+      status,
+      message: statusText,
+      success: false,
+    };
+
+  return {
+    data,
+    error,
+    message: statusText,
+    status,
+    success: true,
+  };
+};

@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -7,11 +8,72 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAllTeamsFromTournamentId } from "@/lib/actions/team/teamsActions";
+import { Match, MatchDay, Team, Tournament } from "@/lib/types";
 import Image from "next/image";
+import { useQuery } from "react-query";
+import { useToast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
+import { calculatePositions } from "@/lib/calculatePositions";
+import { getAllMatchesFromTournament } from "@/lib/actions/matchesActions";
 
-type Props = {};
+type Props = {
+  tournament: Tournament;
+};
 
-const PositionsTable = (props: Props) => {
+const PositionsTable = ({ tournament }: Props) => {
+  const { toast } = useToast();
+
+  const { data: teamsData, isLoading: isLoadingTeams } = useQuery({
+    queryFn: () => getAllTeamsFromTournamentId(tournament.id!),
+    queryKey: ["teams", tournament.id],
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Error",
+        description: err.message || "Algo salio mal con el fetch de equipos.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const { data: matchesData, isLoading: isLoadingMatches } = useQuery({
+    queryFn: () => getAllMatchesFromTournament(tournament.id!),
+    queryKey: ["matches", tournament.id],
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Error",
+        description: err.message || "Algo salio mal con el fetch de partidos.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const teams = teamsData?.data as Team[];
+
+  const matches = matchesData?.data as Match[];
+
+  const { data: positionsData, isLoading: isLoadingPositions } = useQuery({
+    queryFn: () => calculatePositions(tournament, teams, matches),
+    queryKey: ["positions", tournament.id],
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Error",
+        description:
+          err.message || "Algo salio mal con el fetch de posiciones.",
+        variant: "destructive",
+      });
+    },
+  });
+
   return (
     <Table>
       <TableHeader>
@@ -28,77 +90,53 @@ const PositionsTable = (props: Props) => {
           <TableHead className="text-right text-foreground">Pts</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody className="overflow-hidden max-w-full">
-        <TableRow className="bg-gradient-to-l from-accent/0 to-accent hover:bg-gradient-to-b hover:from-accent/20 hover:to-accent/50">
-          <TableCell className="italic text-center bg-card font-black text-xl">
-            1
-          </TableCell>
-          <TableCell className="flex items-center gap-3">
-            <Image
-              alt="user logo"
-              src="/liga_gunta_2.png"
-              width={20}
-              height={20}
-              className="rounded-full"
-            />
-            <span className="font-bold text-lg">IvanBoca</span>
-          </TableCell>
-          <TableCell className="text-lg">10</TableCell>
-          <TableCell className="text-lg">9</TableCell>
-          <TableCell className="text-lg">1</TableCell>
-          <TableCell className="text-lg">0</TableCell>
-          <TableCell className="text-lg">45</TableCell>
-          <TableCell className="text-lg">12</TableCell>
-          <TableCell className="text-lg">34</TableCell>
-          <TableCell className="text-right text-lg">28</TableCell>
-        </TableRow>
-        <TableRow className="">
-          <TableCell className="italic text-center bg-card font-black text-xl">
-            2
-          </TableCell>
-          <TableCell className="flex items-center gap-3">
-            <Image
-              alt="user logo"
-              src="/liga_gunta_2.png"
-              width={20}
-              height={20}
-              className="rounded-full"
-            />
-            <span className="font-bold  text-lg">AgusPlay</span>
-          </TableCell>
-          <TableCell className="text-lg">10</TableCell>
-          <TableCell className="text-lg">9</TableCell>
-          <TableCell className="text-lg">1</TableCell>
-          <TableCell className="text-lg">0</TableCell>
-          <TableCell className="text-lg">45</TableCell>
-          <TableCell className="text-lg">12</TableCell>
-          <TableCell className="text-lg">34</TableCell>
-          <TableCell className="text-right text-lg">24</TableCell>
-        </TableRow>
-        <TableRow className=" bg-gradient-to-l from-destructive/0 to-destructive hover:bg-gradient-to-b hover:from-destructive/20 hover:to-destructive/50">
-          <TableCell className="italic text-center bg-card font-black text-xl">
-            3
-          </TableCell>
-          <TableCell className="flex items-center gap-3">
-            <Image
-              alt="user logo"
-              src="/liga_gunta_2.png"
-              width={20}
-              height={20}
-              className="rounded-full"
-            />
-            <span className="font-bold  text-lg">Tumba</span>
-          </TableCell>
-          <TableCell className="text-lg">10</TableCell>
-          <TableCell className="text-lg">9</TableCell>
-          <TableCell className="text-lg">1</TableCell>
-          <TableCell className="text-lg">0</TableCell>
-          <TableCell className="text-lg">45</TableCell>
-          <TableCell className="text-lg">12</TableCell>
-          <TableCell className="text-lg">34</TableCell>
-          <TableCell className="text-right text-lg">15</TableCell>
-        </TableRow>
-      </TableBody>
+
+      {isLoadingMatches || isLoadingTeams || isLoadingPositions ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        <TableBody className="overflow-hidden max-w-full">
+          {positionsData?.map((team, index) => {
+            const isFirst = index === 0;
+            const isLast = index === positionsData.length - 1;
+
+            const rowStyle = isFirst
+              ? "bg-gradient-to-l from-accent/0 to-accent hover:from-accent/20 hover:to-accent/50"
+              : isLast
+              ? "bg-gradient-to-l from-destructive/0 to-destructive hover:from-destructive/20 hover:to-destructive/50"
+              : "hover:bg-mute";
+
+            return (
+              <TableRow key={team.id} className={rowStyle}>
+                <TableCell className="italic text-center bg-card font-black text-xl">
+                  {index + 1}
+                </TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <Image
+                    alt={`${team.name} logo`}
+                    src={team.logo_url || "/liga_gunta_2.png"}
+                    width={20}
+                    height={20}
+                    className="rounded-full"
+                  />
+                  <span className="font-bold text-lg">{team.name}</span>
+                </TableCell>
+                <TableCell className="text-lg">{team.played}</TableCell>
+                <TableCell className="text-lg">{team.won}</TableCell>
+                <TableCell className="text-lg">{team.drawn}</TableCell>
+                <TableCell className="text-lg">{team.lost}</TableCell>
+                <TableCell className="text-lg">{team.goals_for}</TableCell>
+                <TableCell className="text-lg">{team.goals_against}</TableCell>
+                <TableCell className="text-lg">
+                  {team.goal_difference}
+                </TableCell>
+                <TableCell className="text-right text-lg">
+                  {team.points}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      )}
       <TableCaption>
         <div className="flex items-center gap-4">
           <div className="w-3 h-3 bg-accent rounded-md"></div>

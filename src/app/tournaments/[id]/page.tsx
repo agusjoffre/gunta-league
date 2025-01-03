@@ -23,7 +23,7 @@ const TournamentsPage = ({ params }: Props) => {
 
   const tournament_id = id;
 
-  const { data, isLoading } = useQuery({
+  const { data: tournamentData, isLoading } = useQuery({
     queryFn: () => getOneTournamentById(tournament_id),
     queryKey: ["tournament", tournament_id],
     onError: (err) =>
@@ -35,7 +35,7 @@ const TournamentsPage = ({ params }: Props) => {
       }),
   });
 
-  if (!data) {
+  if (!tournamentData) {
     return (
       <main className="flex min-h-screen flex-col items-center gap-12 pb-10">
         <Loader2 className="animate-spin" />
@@ -43,8 +43,16 @@ const TournamentsPage = ({ params }: Props) => {
     );
   }
 
-  const { name, logo_url, sport, pts_win, pts_draw, pts_defeat } =
-    data.data as Tournament;
+  const {
+    name,
+    logo_url,
+    sport,
+    pts_win,
+    pts_draw,
+    pts_defeat,
+    id: tournamentId,
+    owner_id,
+  } = tournamentData.data as Tournament;
 
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 pb-10">
@@ -71,7 +79,7 @@ const TournamentsPage = ({ params }: Props) => {
             <h1 className="italic font-black text-3xl">POSICIONES</h1>
             <div className="max-w-sm h-1 bg-gradient-to-l from-accent/0 to-accent" />
           </div>
-          <PositionsTable />
+          <PositionsTable tournament={tournamentData.data as Tournament} />
         </div>
         <div className="flex flex-col gap-2 w-full flex-1">
           <div className="flex flex-col gap-1 w-full">
