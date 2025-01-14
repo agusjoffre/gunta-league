@@ -2,6 +2,8 @@
 
 Gunta League is a web application designed to create and manage tournaments easily. With Gunta League, you can add teams, generate fixtures, edit match results, and view the standings in real-time.
 
+Design by Guido Ferrero
+
 ## Key Features
 
 - **Add Teams**: Introduce the teams that will participate in your tournament.
